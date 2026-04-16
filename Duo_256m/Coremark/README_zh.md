@@ -5,6 +5,9 @@ sys_var: v1
 
 status: basics
 last_update: 2026-04-03
+
+model: Milk-V Duo (256M)
+profile: Coremark
 ---
 
 #  RuyiSDK 基础示例

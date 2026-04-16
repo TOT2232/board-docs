@@ -5,6 +5,9 @@ sys_var: v1
 
 status: basics
 last_update: 2026-04-03
+
+model: Milk-V Duo (64M)
+profile: Coremark
 ---
 
 #  RuyiSDK 基础示例
@@ -17,11 +20,11 @@ sudo apt update; sudo apt install -y wget tar zstd xz-utils git build-essent
 安装ruyi包管理器
 
 ```
-wget https://mirror.iscas.ac.cn/ruyisdk/ruyi/tags/0.41.0/ruyi-0.41.0.riscv64
+wget https://mirror.iscas.ac.cn/ruyisdk/ruyi/tags/0.47.0/ruyi-0.47.0.amd64
 
-chmod +x ruyi-0.41.0.riscv64
+chmod +x ./ruyi-0.47.0.amd64
 
-sudo cp -v ruyi-0.41.0.riscv64 /usr/local/bin/ruyi
+sudo cp -v ./ruyi-0.47.0.amd64 /usr/local/bin/ruyi
 ```
 
 安装GCC和LLVM工具链
@@ -36,7 +39,7 @@ ruyi install gnu-plct llvm-plct
 
 创建并激活ruyi虚拟环境（GCC）
 ```
-ruyi venv -t toolchain/gnu-plct milkv-duo venv-gnu-plct-duo
+ruyi venv -t toolchain/gnu-plct generic venv-gnu-plct-duo
 
 . ~/venv-gnu-plct-duo/bin/ruyi-activate
 ```
@@ -54,7 +57,7 @@ git clone https://github.com/eembc/coremark
 
 cd coremark
 
-make CC=riscv64-plct-linux-gnu-gcc XCFLAGS="-mcpu=thead-c906 -static" compile
+make CC=riscv64-plct-linux-gnu-gcc XCFLAGS="-mcpu=thead-c906 -static" compile
 
 mv coremark.exe coremark-gcc
 ```
@@ -123,22 +126,15 @@ ruyi venv -t toolchain/llvm-plct manual --sysroot-from gnu-plct venv-llvm-plct
 clang -v
 ```
 
-编译 Hello World（LLVM）
-
-```
-clang hello.c -o hello-llvm; 
-```
-
 编译 coremark（LLVM）
 
 ```
-cd coremark; make clean
+cd coremark ; make clean
 
-make CC=clang XCFLAGS="-march=rv64imafdc_xtheadba_xtheadbb_xtheadbs_xtheadcmo_\
+make CC=clang XCFLAGS="-march=rv64imafdc_xtheadba_xtheadbb_xtheadbs_xtheadcmo_\
+xtheadcondmov_xtheadfmemidx_xtheadmac_xtheadmemidx_xtheadmempair_xtheadsync -static" compile
 
-xtheadcondmov_xtheadfmemidx_xtheadmac_xtheadmemidx_xtheadmempair_xtheadsync -static" compile
-
-mv coremark.exe coremark-llvm
+mv coremark.exe coremark-llvm
 ```
 
 将LLVM构建的二进制传输到开发板

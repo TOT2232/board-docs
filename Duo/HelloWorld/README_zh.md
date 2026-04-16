@@ -5,6 +5,9 @@ sys_var: v1
 
 status: basics
 last_update: 2026-04-03
+
+model: Milk-V Duo (64M)
+profile: Hello World
 ---
 
 #  RuyiSDK 基础示例
@@ -18,11 +21,11 @@ sudo apt update; sudo apt install -y wget tar zstd xz-utils git build-essent
 安装ruyi包管理器
 
 ```
-wget https://mirror.iscas.ac.cn/ruyisdk/ruyi/tags/0.41.0/ruyi-0.41.0.riscv64
+wget https://mirror.iscas.ac.cn/ruyisdk/ruyi/tags/0.47.0/ruyi-0.47.0.amd64
 
-chmod +x ruyi-0.41.0.riscv64
+chmod +x ./ruyi-0.47.0.amd64
 
-sudo cp -v ruyi-0.41.0.riscv64 /usr/local/bin/ruyi
+sudo cp -v ./ruyi-0.47.0.amd64 /usr/local/bin/ruyi
 ```
 
 安装GCC和LLVM工具链
@@ -37,7 +40,7 @@ ruyi install gnu-plct llvm-plct
 
 创建并激活ruyi虚拟环境（GCC）
 ```
-ruyi venv -t toolchain/gnu-plct milkv-duo venv-gnu-plct-duo
+ruyi venv -t toolchain/gnu-plct generic venv-gnu-plct-duo
 
 . ~/venv-gnu-plct-duo/bin/ruyi-activate
 ```
@@ -51,21 +54,16 @@ riscv64-plct-linux-gnu-gcc -v
 编译Hello World（GCC）
 
 ```
-cat << EOF > hello.c
-
+cat > hello.c << 'EOF'
 #include <stdio.h>
 
-int main() {
-
-    printf("Hello, World!\n");
-
-    return 0;
-
+int main() {
+    printf("Hello, World!\n");
+    return 0;
 }
-
 EOF
 
-riscv64-plct-linux-gnu-gcc hello.c -o hello-gcc
+riscv64-plct-linux-gnu-gcc hello.c -o hello-gcc
 
 ```
 
@@ -78,7 +76,7 @@ scp ../hello-gcc root@192.168.42.1:~
 返回上级目录并退出ruyi GCC虚拟环境
 
 ```
-cd ..; ruyi-deactivate
+cd ..; ruyi-deactivate
 ```
 
 SSH连接到开发板并执行编译好的二进制
@@ -107,7 +105,7 @@ Hello, World!
 创建并激活ruyi虚拟环境（LLVM）
 
 ```
-ruyi venv -t toolchain/llvm-plct manual --sysroot-from gnu-plct venv-llvm-plct
+ruyi venv -t toolchain/llvm-plct manual --sysroot-from gnu-plct venv-llvm-plct
 
 . ~/venv-llvm-plct/bin/ruyi-activate
 ```
@@ -120,7 +118,7 @@ clang -v
 编译 Hello World（LLVM）
 
 ```
-clang hello.c -o hello-llvm; 
+clang hello.c -o hello-llvm; 
 ```
 
 将LLVM构建的二进制传输到开发板

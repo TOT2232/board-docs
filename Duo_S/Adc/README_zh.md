@@ -65,7 +65,9 @@ ruyi install gnu-plct llvm-plct
 
 ```bash
 
-git clone https://github.com/milkv-duo/duo-examples.git
+ruyi extract milkv-duo-examples
+
+mv milkv-duo-examples-* duo-examples 
 
 cd duo-examples
 

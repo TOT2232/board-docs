@@ -7,7 +7,7 @@
 
 | provider | RevyOS |
 
-| status | ✅ 已验证 |
+| status | AI |
 
 | last\_update | 2026-04-24 |
 
@@ -164,20 +164,24 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 ```
 
-## **MobilenetV2测试示例**
+## **YOLOV5n测试示例**
 ### **示例描述和硬件环境准备**
-示例描述：
+示例描述：YOLOv5n 是轻量级目标检测模型，本示例在 Lichee Pi 4A 上运行 YOLOv5n，验证 RuyiSDK 工具链的 NPU 交叉编译能力。
 硬件环境：Lichee Pi 4A (16GB)   
-
+软件环境：RuyiSDK 0.47.0，HHB 2.6.17
 
 ### **创建并激活 ruyi 虚拟环境**
 
 创建虚拟环境 venv-sipeed  
+```bash
 ruyi venv -t gnu-plct-xthead sipeed-lpi4a venv-sipeed 
-
+```
 激活虚拟环境  
+```bash
 . venv-sipeed/bin/ruyi-activate 
-
+```
+终端显示如下：  
+```bash
 licheepi@licheepi-virtual-machine:~$ ruyi venv -t gnu-plct-xthead sipeed-lpi4a venv-sipeed 
 info: Creating a Ruyi virtual environment at venv-sipeed...
 info: The virtual environment is now created.
@@ -196,7 +200,7 @@ comments in the files contain usage instructions.
 
 licheepi@licheepi-virtual-machine:~$ . venv-sipeed/bin/ruyi-activate 
 «Ruyi venv-sipeed» licheepi@licheepi-virtual-machine:~$ 
-
+```
 
 ### **使用 ruyi 工具链编译示例代码**
 确认交叉编译器可用  

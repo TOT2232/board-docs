@@ -4,7 +4,7 @@ sys_ver: "20251226"
 sys_var: null
 
 status: AI
-last_update: 2026-04-30
+last_update: 2026-05-06
 
 model: Lichee Pi 4A
 profile: MobilenetV2
@@ -407,6 +407,3 @@ n02127052 lynx, catamount
 n02124075 Egyptian cat
 n02123159 tiger cat
 ```
-
-
- 

@@ -12,7 +12,7 @@ profile: MobilenetV2
 
 # **RuyiSDK示例 AI 示例**
 本示例需要搭建好 NPU 使用相关环境，如没有搭建，请参考环境配置搭建。
-##环境配置
+## 环境配置
 ### **开发板配置**
 安装python虚拟环境  
 ```bash
@@ -49,7 +49,7 @@ wget https://github.com/zhangwm-pt/onnxruntime/releases/download/riscv_whl_v2.6.
 pip install hhb_onnxruntime_th1520-2.6.0-cp311-cp311-linux_riscv64.whl
 ```
 ### **宿主机（x86）环境配置-安装Docker**
-###**安装docker**
+### **安装docker**
 ```bash
 sudo apt update
 sudo apt install -y ca-certificates curl
@@ -82,11 +82,11 @@ newgrp docker
 ```
 拉取 HHB Docker 镜像
 ```bash
-docker pull hhb4tools/hhb:latest
+docker pull hhb4tools/hhb:2.6.17
 ```
 创建容器，名字为hhb_env  
 ```bash
-docker run -itd --name hhb_env hhb4tools/hhb:latest
+docker run -itd --name hhb_env hhb4tools/hhb:2.6.17
 #进入容器
 docker exec -it hhb_env /bin/bash
 ```
@@ -260,6 +260,8 @@ source ./bin/ruyi-activate
 riscv64-plctxthead-linux-gnu-g++ --version
 # 复制整个 onnx_mobilenetv2_c++ 目录（包含 main.cpp, hhb_out 等）
 docker cp hhb_env:/home/example/th1520_npu/onnx_mobilenetv2_c++ .
+# 复制 prebuilt_opencv 目录（交叉编译所需 OpenCV 库）
+docker cp hhb_env:/home/example/th1520_npu/prebuilt_opencv .
 ```
 交叉编译：
 ```bash

@@ -255,9 +255,11 @@ source ./bin/ruyi-activate
 
 ### **使用 ruyi 工具链编译示例代码**
 
-确认交叉编译器可用
+确认交叉编译器可用：
 ```bash
 riscv64-plctxthead-linux-gnu-g++ --version
+```
+```bash
 # 复制整个 onnx_mobilenetv2_c++ 目录（包含 main.cpp, hhb_out 等）
 docker cp hhb_env:/home/example/th1520_npu/onnx_mobilenetv2_c++ .
 # 复制 prebuilt_opencv 目录（交叉编译所需 OpenCV 库）

@@ -48,7 +48,7 @@ NPU版本
 wget https://github.com/zhangwm-pt/onnxruntime/releases/download/riscv_whl_v2.6.0/hhb_onnxruntime_th1520-2.6.0-cp311-cp311-linux_riscv64.whl
 pip install hhb_onnxruntime_th1520-2.6.0-cp311-cp311-linux_riscv64.whl
 ```
-### **宿主机（x86）环境配置-安装Docker**
+### **宿主机（x86）环境配置**
 ### **安装docker**
 ```bash
 sudo apt update
@@ -471,7 +471,9 @@ main.cpp                               100% 3705   172.5KB/s   00:00
 ```
 
 先确认开发板驱动是否加载：  
+```bah
 lsmod
+```
 若在输出中有 img_mem，vha 和 vha_info 这三个模块，NPU驱动即加载成功。  
 若没有加载，手动加载模块：  
 ```bash

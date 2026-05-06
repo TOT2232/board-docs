@@ -60,7 +60,8 @@ curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 ```
 安装成功后查看docker及其状态:
-``bash
+
+```bash
 docker --version
 sudo systemctl status docker
 ```
@@ -90,6 +91,143 @@ docker run -itd --name hhb_env hhb4tools/hhb:2.6.17
 docker exec -it hhb_env /bin/bash
 ```
 获取本节教程的模型
+```bash
+sudo mkdir -p /home/example/th1520_npu/onnx_mobilenetv2_c++
+#修改权限让当前用户可读写
+sudo chown -R licheepi:licheepi /home/example
+#进入目录
+cd /home/example/th1520_npu/onnx_mobilenetv2_c++
+```
+在该目录下下载模型mobilenetv2-12.onnx
+```bash
+wget https://github.com/onnx/models/blob/main/validated/vision/classification/mobilenet/model/mobilenetv2-12.onnx
+```
+终端显示如下：  
+```text
+licheepi@licheepi-virtual-machine:~$ docker start hhb_env
+hhb_env
+licheepi@licheepi-virtual-machine:~$ docker exec -it hhb_env /bin/bash
+root@78776422f7c9:/# cd /home/example/th1520_npu
+root@78776422f7c9:/home/example/th1520_npu# mkdir -p /home/example/th1520_npu/onnx_mobilenetv2_c++
+root@78776422f7c9:/home/example/th1520_npu# cd onnx_mobilenetv2_c++
+
+root@78776422f7c9:/home/example/th1520_npu/onnx_mobilenetv2_c++# wget https://github.com/onnx/models/raw/main/validated/vision/classification/mobilenet/model/mobilenetv2-12.onnx
+--2026-04-28 06:33:19--  https://github.com/onnx/models/raw/main/validated/vision/classification/mobilenet/model/mobilenetv2-12.onnx
+Resolving github.com (github.com)... 20.205.243.166
+Connecting to github.com (github.com)|20.205.243.166|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://media.githubusercontent.com/media/onnx/models/main/validated/vision/classification/mobilenet/model/mobilenetv2-12.onnx [following]
+--2026-04-28 06:33:20--  https://media.githubusercontent.com/media/onnx/models/main/validated/vision/classification/mobilenet/model/mobilenetv2-12.onnx
+Resolving media.githubusercontent.com (media.githubusercontent.com)... 185.199.109.133, 185.199.111.133, 185.199.110.133, ...
+Connecting to media.githubusercontent.com (media.githubusercontent.com)|185.199.109.133|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 13964571 (13M) [application/octet-stream]
+Saving to: 'mobilenetv2-12.onnx'
+
+mobilenetv2-12.onn 100%[==============>]  13.32M  1.80MB/s    in 7.6s    
+2026-04-28 06:33:29 (1.76 MB/s) - 'mobilenetv2-12.onnx' saved [13964571/13964571]
+```
+
+获取本次教程所使用的优化版本 opencv 所需的库文件
+```bash
+cd /home/example/th1520_npu/
+git clone https://github.com/zhangwm-pt/prebuilt_opencv.git
+```
+在终端显示如下：
+```text
+root@78776422f7c9:/home/example/th1520_npu/onnx_mobilenetv2_c++# cd ..
+root@78776422f7c9:/home/example/th1520_npu# git clone https://github.com/zhangwm-pt/prebuilt_opencv.git
+Cloning into 'prebuilt_opencv'...
+remote: Enumerating objects: 461, done.
+remote: Counting objects: 100% (4/4), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 461 (delta 0), reused 4 (delta 0), pack-reused 457 (from 1)
+Receiving objects: 100% (461/461), 47.56 MiB | 8.72 MiB/s, done.
+Resolving deltas: 100% (78/78), done.
+Updating files: 100% (395/395), done.
+```
+```bash
+# 进入示例目录
+cd /home/example/th1520_npu/onnx_mobilenetv2_c++
+
+# 执行 HHB 编译模型
+hhb -D --model-file mobilenetv2-12.onnx \
+  --data-scale 0.017 \
+  --data-mean "124 117 104" \
+  --board th1520 \
+  --postprocess save_and_top5 \
+  --input-name "input" \
+  --output-name "output" \
+  --input-shape "1 3 224 224" \
+  --calibrate-dataset persian_cat.jpg \
+  --quantization-scheme "int8_asym"
+```
+会在终端显示如下：  
+```text
+root@78776422f7c9:/home/example/th1520_npu# cd /home/example/th1520_npu/onnx_mobilenetv2_c++
+
+root@78776422f7c9:/home/example/th1520_npu/onnx_mobilenetv2_c++
+# hhb -D --model-file mobilenetv2-12.onnx \
+>   --data-scale 0.017 \
+>   --data-mean "124 117 104" \
+>   --board th1520 \
+>   --postprocess save_and_top5 \
+>   --input-name "input" \
+>   --output-name "output" \
+>   --input-shape "1 3 224 224" \
+>   --calibrate-dataset persian_cat.jpg \
+>   --quantization-scheme "int8_asym"
+[2026-04-30 03:20:38] (HHB LOG): Start import model.
+[2026-04-30 03:20:38] (HHB LOG): Model import completed! 
+[2026-04-30 03:20:38] (HHB LOG): Start quantization.
+[2026-04-30 03:20:38] (HHB LOG): get calibrate dataset from persian_cat.jpg
+[2026-04-30 03:20:38] (HHB LOG): Start optimization.
+[2026-04-30 03:20:39] (HHB LOG): Optimization completed!
+Calibrating: 100%|███████████| 153/153 [00:13<00:00, 11.76it/s]
+[2026-04-30 03:20:52] (HHB LOG): Start conversion to csinn.
+[2026-04-30 03:20:52] (HHB LOG): Conversion completed!
+[2026-04-30 03:20:52] (HHB LOG): Start operator fusion.
+[2026-04-30 03:20:52] (HHB LOG): Operator fusion completed!
+[2026-04-30 03:20:52] (HHB LOG): Start operator split.
+[2026-04-30 03:20:52] (HHB LOG): Operator split completed!
+[2026-04-30 03:20:52] (HHB LOG): Start layout convert.
+[2026-04-30 03:20:52] (HHB LOG): Layout convert completed!
+[2026-04-30 03:20:52] (HHB LOG): Quantization completed!
+
+```
+退出docker环境：
+```bash
+exit
+```
+
+### **安装 RuyiSDK**
+```bash
+# 下载并安装 ruyi
+wget https://mirror.iscas.ac.cn/ruyisdk/ruyi/tags/0.47.0/ruyi-0.47.0.amd64
+chmod +x ruyi-0.47.0.amd64
+sudo cp ruyi-0.47.0.amd64 /usr/local/bin/ruyi
+```
+### **安装工具链**
+```bash
+ruyi update
+ruyi install gnu-plct-xthead
+```
+
+会在终端看到如下输出：  
+```text
+
+info: skipping already installed package gnu-plct-xthead-3.1.0-ruyi.20250526
+
+```
+
+
+## **MobilenetV2**
+### **示例描述和硬件环境准备**
+本教程是一个如何在 LicheePi4A 平台上部署 mobilenetv2 模型完成图像分类的示例。  
+硬件环境：Lichee Pi 4A (16GB)    
+软件环境：RuyiSDK：0.47.0  HHB：2.6.17  
+### **环境配置**
+首先获取本节教程的模型
 ```bash
 sudo mkdir -p /home/example/th1520_npu/onnx_mobilenetv2_c++
 #修改权限让当前用户可读写

@@ -56,7 +56,6 @@ sudo apt install -y ca-certificates curl
 ```
 ```bash
 # 下载 Docker 官方安装脚本并执行
-
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 ```
